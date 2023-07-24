@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Player: React.FC<{ songUrl: string }> = ({ songUrl }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -14,10 +13,10 @@ const Player: React.FC<{ songUrl: string }> = ({ songUrl }) => {
   }, [isPlaying]);
 
   return (
-    <div className="player" style={{margin : "24px"}}>
+    <div className="player" style={{ margin: "24px" }}>
       <audio ref={audioRef} src={songUrl}></audio>
       <button onClick={() => setIsPlaying(!isPlaying)}>
-        {isPlaying ? 'Pause' : 'Play'}
+        {isPlaying ? "Pause" : "Play"}
       </button>
     </div>
   );

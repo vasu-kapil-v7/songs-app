@@ -26,7 +26,6 @@ const LoginPaper = styled(Paper)(({ theme }) => ({
     };
   
     const handleLoginSubmit = () => {
-      // Handle login form submission
       console.log('Email:', email);
       console.log('Password:', password);
       const dummyUsername = 'JohnDoe';

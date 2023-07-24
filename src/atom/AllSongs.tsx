@@ -16,7 +16,7 @@ export const allSongsSelector = selector<Song[]>({
   },
 });
 
-// Use a custom hook to get the set function for allSongsAtom
+
 export const useSetAllSongs = () => {
   const setAllSongs = useSetRecoilState(allSongsAtom);
   return setAllSongs;

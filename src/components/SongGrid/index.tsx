@@ -13,7 +13,7 @@ export interface Song {
   trackId: number;
   trackName: string;
   artistName: string;
-  previewUrl: string; // Add the previewUrl field for the song
+  previewUrl: string; 
 }
 
 interface SongsGridProps {
@@ -35,7 +35,6 @@ const SongsGrid: React.FC<SongsGridProps> = ({ term, offset }) => {
   const fetchSongs = useCallback(async () => {
     const songsData = await getSongs(term, offset);
     setSongs(songsData);
-    // Update the allSongsAtom with the fetched data
     setAllSongs(songsData);
   }, [term, offset, setAllSongs]);
 

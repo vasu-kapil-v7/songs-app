@@ -1,5 +1,3 @@
-// In the ModalComponent.tsx file
-
 import React from 'react';
 import { Modal, ModalProps } from '@mui/material';
 
@@ -8,7 +6,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100vh', // Set the height of the container to the full viewport height
+    height: '100vh',
   },
   modalContent: {
     backgroundColor: '#fff',

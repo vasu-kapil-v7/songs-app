@@ -9,8 +9,8 @@ import { useUserContext } from '../../contexts/user';
 import FavoritesSidebar from '../Favorites';
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  backgroundColor: '#19a4c3;', // Replace with your desired background color
-  color: '#ffffff', // Replace with your desired text color
+  backgroundColor: '#19a4c3;',
+  color: '#ffffff',
 }));
 
 const LogoLink = styled(Link)({
