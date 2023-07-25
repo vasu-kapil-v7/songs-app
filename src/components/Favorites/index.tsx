@@ -19,13 +19,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const FavoritesSidebar:  React.FC<FavoritesSidebarProps> = ({ isOpen, onClose }) => {
   const classes = useStyles();
   const favoriteSongIds = useRecoilValue(favoriteSongsAtom);
   
   const allSongs = useRecoilValue(allSongsAtom);
-  console.log(favoriteSongIds,allSongs)
+  console.log('Is Favorites Sidebar Open:', isOpen);
   const favoriteSongs = allSongs.filter((song) => favoriteSongIds.includes(song.trackId));
+
+  const handleClose = () => {
+    onClose();
+  };
 
   return (
     <Drawer
@@ -34,7 +40,7 @@ const FavoritesSidebar:  React.FC<FavoritesSidebarProps> = ({ isOpen, onClose })
       classes={{
         paper: classes.drawerPaper,
       }}
-      open={isOpen}
+      open={false}
       anchor="right"
     >
       <List>
@@ -47,7 +53,7 @@ const FavoritesSidebar:  React.FC<FavoritesSidebarProps> = ({ isOpen, onClose })
           </ListItem>
         ))}
       </List>
-      <button onClick={onClose}>Close Favorites</button>
+      <button onClick={handleClose}>Close Favorites</button>
     </Drawer>
   );
 };

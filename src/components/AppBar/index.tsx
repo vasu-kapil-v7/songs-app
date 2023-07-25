@@ -6,11 +6,15 @@ import { Link } from 'react-router-dom';
 import ModalComponent from '../../shared/Modal/Modal';
 import { LoginForm } from '../../pages/Login';
 import { useUserContext } from '../../contexts/user';
-import FavoritesSidebar from '../Favorites';
+import SongsGrid, { Song } from '../SongGrid';
+import { useRecoilValue } from 'recoil';
+import { allSongsAtom } from '../../atom/AllSongs';
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: '#19a4c3;',
   color: '#ffffff',
+  position: 'fixed',
+
 }));
 
 const LogoLink = styled(Link)({
@@ -69,18 +73,20 @@ const AppBarComponent: React.FC = () => {
       setOpenLoginModal(false);
     };
 
-    const handleFavoritesDrawerOpen = () => {
-      setIsFavoritesDrawerOpen(true);
+    const handleFavoritesDrawerToggle = () => {
+      setIsFavoritesDrawerOpen((prevIsOpen) => !prevIsOpen);
     };
-  
+
     const handleFavoritesDrawerClose = () => {
+      console.log('Closing Favorites Sidebar');
       setIsFavoritesDrawerOpen(false);
     };
 
+    const allSongs = useRecoilValue<Song[]>(allSongsAtom);
 
   return (
     <>
-    <AppBar position="static">
+    <AppBar>
       <Toolbar>
         <LogoLink to="/">
           <Typography variant="h6">Logo</Typography>
@@ -93,7 +99,7 @@ const AppBarComponent: React.FC = () => {
         </Search>
         {user ? (
             <div>
-              <Typography variant="body1" onClick={handleFavoritesDrawerOpen}>
+              <Typography variant="body1" sx={{cursor : "pointer"}} onClick={handleFavoritesDrawerToggle}>
                 Favorites
               </Typography>
               <Typography variant="body1">{user.username}</Typography>
@@ -104,10 +110,20 @@ const AppBarComponent: React.FC = () => {
           )}
       </Toolbar>
     </AppBar>
+    {user ? (
+                <div style={{ marginTop: '64px' }}>
+                    <SongsGrid />
+                </div>
+            ) : (
+                <div style={{ marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img style={{objectFit : "cover",height :"100%",width:"100%"}} src="/music.jpg" alt="Login Prompt" />
+                    <Button onClick={handleLoginOpen}>Login</Button>
+                </div>
+            )}
      <ModalComponent open={openLoginModal} onClose={handleLoginClose}>
-     <LoginForm onClose={handleLoginClose}/>
+     <LoginForm/>
    </ModalComponent>
-   <FavoritesSidebar isOpen={isFavoritesDrawerOpen} onClose={handleFavoritesDrawerClose} />
+  
    </>
   );
 };

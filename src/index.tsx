@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-
 import reportWebVitals from './reportWebVitals';
 import AppBarComponent from './components/AppBar';
 import UserProvider from './contexts/user';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes';
+import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <UserProvider>
-    <App />
+    <RecoilRoot>
+    <RouterProvider router={router} />
+    </RecoilRoot>
     </UserProvider>
   </React.StrictMode>
 );

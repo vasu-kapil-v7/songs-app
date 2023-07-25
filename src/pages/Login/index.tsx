@@ -8,11 +8,11 @@ const LoginPaper = styled(Paper)(({ theme }) => ({
     maxWidth: 400,
   }));
   
-  interface LoginFormProps {
-    onClose: () => void;
-  }
+  // interface LoginFormProps {
+  //   onClose: () => void;
+  // }
   
-  export const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
+  export const LoginForm: React.FC = () => {
     const { login } = useUserContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,7 +30,7 @@ const LoginPaper = styled(Paper)(({ theme }) => ({
       console.log('Password:', password);
       const dummyUsername = 'JohnDoe';
       login(dummyUsername);
-      onClose();
+      
     };
   
     return (

@@ -1,37 +1,21 @@
-import { Routes, Route } from "react-router-dom";
-import AppBarComponent from "../components/AppBar";
-import { makeStyles} from '@mui/styles';
-import SongsGrid from "../components/SongGrid";
+import { createBrowserRouter } from "react-router-dom";
+import HeaderLayout from "../components/Layout/HeaderLayout";
+import { LoginForm } from "../pages/Login";
+import MainPage from "../pages/Main";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
-import FavoritesSidebar from "../components/Favorites";
-import Player from "../components/SongPlayer";
 
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginForm />,
   },
-  content: {
-    flex: 1,
-  
+  {
+    path: "/",
+    element: <HeaderLayout />,
+    children: [{ path: "home", element: <MainPage /> }],
   },
-}));
+  { path: "*", element: <PageNotFound/> },
+]);
 
-const AppRoutes: React.FC = () => {
-  const classes = useStyles();
-
-  return (
-    <div>
-      <Routes>
-        <Route path="/" element={<AppBarComponent />}>
-          <Route index element={<div className={classes.content}><SongsGrid term="love" offset={0} /></div>} />
-        </Route>
-        <Route path="/check" element={<div className={classes.content}><SongsGrid term="love" offset={0} /></div>} />
-
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </div>
-  );
-};
-
-export default AppRoutes;
+export default router;
