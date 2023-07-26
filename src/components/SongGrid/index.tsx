@@ -1,4 +1,4 @@
-// SongGrid.tsx
+
 import React, { useEffect } from 'react';
 import { Grid, Card, CardContent, Typography, IconButton, Box } from '@mui/material';
 import { PlayArrow as PlayArrowIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
@@ -17,6 +17,7 @@ export interface Song {
 
 interface SongsGridProps {
   favSongs?: boolean;
+  searchTerm?: string; // New prop for search term
 }
 
 const isSong = (obj: any): obj is Song => {
@@ -30,10 +31,32 @@ const isSong = (obj: any): obj is Song => {
 };
 
 
-const SongsGrid: React.FC<SongsGridProps> = ({ favSongs }) => {
+const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
   const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<string | null>(currentPlayingSongAtom);
   const [favoriteSongs, setFavoriteSongs] = useRecoilState<number[]>(favoriteSongsAtom);
   const [songs, setSongs] = React.useState<Song[]>([]);
+  const [searchedSongs, setSearchedSongs] = React.useState<Song[]>([]);
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      const songsData = await getSongs(searchTerm || 'love', 0); // Fetch the songs data using the getSongs API
+      setSongs(songsData);
+    };
+
+    fetchSongs();
+  }, [searchTerm]); // Add searchTerm to the dependency array of useEffect
+
+  // Update the songs to display based on search term
+  useEffect(() => {
+    if (searchTerm) {
+      const filteredSongs = songs.filter((song) =>
+        song?.trackName?.toLowerCase().includes(searchTerm?.toLowerCase())
+      );
+      setSearchedSongs(filteredSongs);
+    } else {
+      setSearchedSongs(songs);
+    }
+  }, [searchTerm, songs]);
   const songsToDisplay = favSongs
   ? songs.filter((song) => favoriteSongs.includes(song.trackId))
   : songs;
@@ -52,14 +75,14 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs }) => {
 
   const isFavorite = (trackId: number) => favoriteSongs.includes(trackId);
 
-  useEffect(() => {
-    const fetchSongs = async () => {
-      const songsData = await getSongs('love', 0); // Fetch the songs data using the getSongs API
-      setSongs(songsData);
-    };
+  // useEffect(() => {
+  //   const fetchSongs = async () => {
+  //     const songsData = await getSongs('love', 0); // Fetch the songs data using the getSongs API
+  //     setSongs(songsData);
+  //   };
 
-    fetchSongs();
-  }, []);
+  //   fetchSongs();
+  // }, []);
 
   return (
     <>

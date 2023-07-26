@@ -5,8 +5,11 @@ import { useUserContext } from '../../contexts/user';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPaper = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(2),
+    padding: theme.spacing(4),
     maxWidth: 400,
+    margin : 'auto',
+    marginTop : "20%",
+    border : "1px solid black",
   }));
   
   interface LoginFormProps {
@@ -62,7 +65,7 @@ const LoginPaper = styled(Paper)(({ theme }) => ({
           onChange={handlePasswordChange}
           margin="normal"
         />
-        <Button variant="contained" color="primary" fullWidth onClick={handleLoginSubmit}>
+        <Button sx={{marginTop : "16px"}} variant="contained" color="primary" fullWidth onClick={handleLoginSubmit}>
           Login
         </Button>
       </LoginPaper>
