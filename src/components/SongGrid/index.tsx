@@ -1,24 +1,11 @@
-
-import React, { useEffect } from 'react';
-import { Grid, Card, CardContent, Typography, IconButton, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, Card, CardContent, Typography, IconButton, Box, CircularProgress, Button } from '@mui/material';
 import { PlayArrow as PlayArrowIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
 import { useRecoilState } from 'recoil';
 import { currentPlayingSongAtom, favoriteSongsAtom } from '../../atom/CurrentSong';
 import { getSongs } from '../../apis/songs';
 import Player from '../SongPlayer';
-
-
-export interface Song {
-  trackId: number;
-  trackName: string;
-  artistName: string;
-  previewUrl: string;
-}
-
-interface SongsGridProps {
-  favSongs?: boolean;
-  searchTerm?: string; // New prop for search term
-}
+import { cardStyle } from './styles';
 
 const isSong = (obj: any): obj is Song => {
   return (
@@ -30,23 +17,41 @@ const isSong = (obj: any): obj is Song => {
   );
 };
 
-
 const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
   const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<string | null>(currentPlayingSongAtom);
   const [favoriteSongs, setFavoriteSongs] = useRecoilState<number[]>(favoriteSongsAtom);
-  const [songs, setSongs] = React.useState<Song[]>([]);
-  const [searchedSongs, setSearchedSongs] = React.useState<Song[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [searchedSongs, setSearchedSongs] = useState<Song[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const limit = 50;
 
   useEffect(() => {
     const fetchSongs = async () => {
-      const songsData = await getSongs(searchTerm || 'love', 0); // Fetch the songs data using the getSongs API
-      setSongs(songsData);
+      if (isLoading) return;
+      setIsLoading(true);
+
+      try {
+        const songsData = await getSongs(searchTerm || 'love', offset, limit);
+        if (offset === 0) {
+          setSongs(songsData);
+        } else {
+          setSongs((prevSongs) => [...prevSongs, ...songsData]);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        setIsLoading(false);
+      }
     };
 
     fetchSongs();
-  }, [searchTerm]); // Add searchTerm to the dependency array of useEffect
+  }, [searchTerm, offset]);
 
-  // Update the songs to display based on search term
+  useEffect(() => {
+    setSongs([]);
+    setOffset(0);
+  }, [searchTerm]);
+
   useEffect(() => {
     if (searchTerm) {
       const filteredSongs = songs.filter((song) =>
@@ -57,10 +62,9 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
       setSearchedSongs(songs);
     }
   }, [searchTerm, songs]);
-  const songsToDisplay = favSongs
-  ? songs.filter((song) => favoriteSongs.includes(song.trackId))
-  : songs;
-  
+
+  const songsToDisplay = favSongs ? songs.filter((song) => favoriteSongs.includes(song.trackId)) : songs;
+
   const handlePlaySong = (previewUrl: string) => {
     setCurrentPlayingSong(previewUrl);
   };
@@ -75,25 +79,19 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
 
   const isFavorite = (trackId: number) => favoriteSongs.includes(trackId);
 
-  // useEffect(() => {
-  //   const fetchSongs = async () => {
-  //     const songsData = await getSongs('love', 0); // Fetch the songs data using the getSongs API
-  //     setSongs(songsData);
-  //   };
-
-  //   fetchSongs();
-  // }, []);
+  const handleLoadMore = () => {
+    setOffset((prevOffset) => prevOffset + limit);
+  };
 
   return (
     <>
       <Grid container spacing={3}>
         {songsToDisplay.length > 0 ? (
           songsToDisplay.map((song) => {
-            console.log(songsToDisplay);
             if (isSong(song)) {
               return (
                 <Grid key={song.trackId} item xs={12} sm={6} md={4} lg={3}>
-                  <Card sx={{ height: "200px", width: "220px", margin: "24px" }}>
+                  <Card sx={cardStyle}>
                     <CardContent>
                       <Typography variant="h6" gutterBottom>
                         {song.trackName}
@@ -108,7 +106,7 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
                       >
                         <PlayArrowIcon />
                       </IconButton>
-                      {!favSongs && ( // Show add-to-favorite button only if not displaying favorite songs
+                      {!favSongs && (
                         <IconButton
                           color={isFavorite(song.trackId) ? "secondary" : "default"}
                           aria-label="favorite"
@@ -127,8 +125,7 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
                 </Grid>
               );
             } else {
-              console.log('hererteterteter')
-              return null; // If the song is not of type 'Song', skip rendering it
+              return null;
             }
           })
         ) : (
@@ -139,9 +136,16 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
           </Box>
         )}
       </Grid>
-      {/* {currentPlayingSong && (
-        <div>Currently Playing: {currentPlayingSong}</div>
-      )} */}
+      {isLoading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+          <CircularProgress color="primary" />
+        </Box>
+      )}
+      {!isLoading && songsToDisplay.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 3 }}>
+          <Button onClick={handleLoadMore}>Load More</Button>
+        </Box>
+      )}
     </>
   );
 };

@@ -1,7 +1,6 @@
 // src/atoms/SongAtoms.ts
 
 import { atom } from 'recoil';
-import { Song } from '../components/SongGrid';
 
 export const songsAtom = atom<Song[]>({
   key: 'songs',

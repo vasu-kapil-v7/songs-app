@@ -1,7 +1,7 @@
 // atom/AllSongs.ts
 
 import { atom, selector, useSetRecoilState } from 'recoil';
-import { Song } from '../components/SongGrid';
+
 
 export const allSongsAtom = atom<Song[]>({
   key: 'allSongs',

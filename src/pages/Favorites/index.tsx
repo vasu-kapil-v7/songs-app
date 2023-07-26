@@ -3,7 +3,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { allSongsAtom } from '../../atom/AllSongs';
 import { favoriteSongsAtom } from '../../atom/CurrentSong';
-import SongsGrid, { Song } from '../../components/SongGrid';
+import SongsGrid from '../../components/SongGrid';
 
 const FavoritesPage: React.FC = () => {
   const favoriteSongIds = useRecoilValue<number[]>(favoriteSongsAtom);
