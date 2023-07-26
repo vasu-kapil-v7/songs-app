@@ -15,11 +15,29 @@ export interface Song {
   previewUrl: string;
 }
 
-const SongsGrid: React.FC = () => {
+interface SongsGridProps {
+  favSongs?: boolean;
+}
+
+const isSong = (obj: any): obj is Song => {
+  return (
+    typeof obj === 'object' &&
+    'trackId' in obj &&
+    'trackName' in obj &&
+    'artistName' in obj &&
+    'previewUrl' in obj
+  );
+};
+
+
+const SongsGrid: React.FC<SongsGridProps> = ({ favSongs }) => {
   const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<string | null>(currentPlayingSongAtom);
   const [favoriteSongs, setFavoriteSongs] = useRecoilState<number[]>(favoriteSongsAtom);
   const [songs, setSongs] = React.useState<Song[]>([]);
-
+  const songsToDisplay = favSongs
+  ? songs.filter((song) => favoriteSongs.includes(song.trackId))
+  : songs;
+  
   const handlePlaySong = (previewUrl: string) => {
     setCurrentPlayingSong(previewUrl);
   };
@@ -46,43 +64,61 @@ const SongsGrid: React.FC = () => {
   return (
     <>
       <Grid container spacing={3}>
-        {songs.length > 0 ? (
-          songs.map((song) => (
-            <Grid key={song.trackId} item xs={12} sm={6} md={4} lg={3}>
-              <Card sx={{ height: '200px', width: '220px', margin: '24px' }}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    {song.trackName}
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    {song.artistName}
-                  </Typography>
-                  <IconButton color="primary" aria-label="play" onClick={() => handlePlaySong(song.previewUrl)}>
-                    <PlayArrowIcon />
-                  </IconButton>
-                  <IconButton
-                    color={isFavorite(song.trackId) ? 'secondary' : 'default'}
-                    aria-label="favorite"
-                    onClick={() =>
-                      isFavorite(song.trackId)
-                        ? handleRemoveFromFavorites(song.trackId)
-                        : handleAddToFavorites(song.trackId)
-                    }
-                  >
-                    <FavoriteIcon />
-                  </IconButton>
-                </CardContent>
-              </Card>
-              <Player songUrl={song.previewUrl} />
-            </Grid>
-          ))
+        {songsToDisplay.length > 0 ? (
+          songsToDisplay.map((song) => {
+            console.log(songsToDisplay);
+            if (isSong(song)) {
+              return (
+                <Grid key={song.trackId} item xs={12} sm={6} md={4} lg={3}>
+                  <Card sx={{ height: "200px", width: "220px", margin: "24px" }}>
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {song.trackName}
+                      </Typography>
+                      <Typography variant="body1" gutterBottom>
+                        {song.artistName}
+                      </Typography>
+                      <IconButton
+                        color="primary"
+                        aria-label="play"
+                        onClick={() => handlePlaySong(song.previewUrl)}
+                      >
+                        <PlayArrowIcon />
+                      </IconButton>
+                      {!favSongs && ( // Show add-to-favorite button only if not displaying favorite songs
+                        <IconButton
+                          color={isFavorite(song.trackId) ? "secondary" : "default"}
+                          aria-label="favorite"
+                          onClick={() =>
+                            isFavorite(song.trackId)
+                              ? handleRemoveFromFavorites(song.trackId)
+                              : handleAddToFavorites(song.trackId)
+                          }
+                        >
+                          <FavoriteIcon />
+                        </IconButton>
+                      )}
+                    </CardContent>
+                  </Card>
+                  <Player songUrl={song.previewUrl} />
+                </Grid>
+              );
+            } else {
+              console.log('hererteterteter')
+              return null; // If the song is not of type 'Song', skip rendering it
+            }
+          })
         ) : (
-          <Box sx={{ width: '100%', textAlign: 'center' }}>
-            <Typography variant="body1">No Songs Added to Favorites</Typography>
+          <Box sx={{ width: "100%", textAlign: "center" }}>
+            <Typography variant="body1">
+              {favSongs ? "No Favorite Songs Added" : "No Songs Found"}
+            </Typography>
           </Box>
         )}
       </Grid>
-      {currentPlayingSong && <div>Currently Playing: {currentPlayingSong}</div>}
+      {/* {currentPlayingSong && (
+        <div>Currently Playing: {currentPlayingSong}</div>
+      )} */}
     </>
   );
 };

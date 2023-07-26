@@ -7,14 +7,12 @@ import SongsGrid, { Song } from '../../components/SongGrid';
 
 const FavoritesPage: React.FC = () => {
   const favoriteSongIds = useRecoilValue<number[]>(favoriteSongsAtom);
-
-  // Get the favorite songs from the allSongs array based on their trackIds
   const allSongs = useRecoilValue<Song[]>(allSongsAtom);
   const favoriteSongs = allSongs.filter((song) => favoriteSongIds.includes(song.trackId));
 
   return (
     <div>
-      <SongsGrid  />
+      <SongsGrid favSongs={!!favoriteSongs} />
     </div>
   );
 };

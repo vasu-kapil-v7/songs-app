@@ -9,6 +9,7 @@ import { useUserContext } from '../../contexts/user';
 import SongsGrid, { Song } from '../SongGrid';
 import { useRecoilValue } from 'recoil';
 import { allSongsAtom } from '../../atom/AllSongs';
+import { useNavigate } from 'react-router-dom';
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: '#19a4c3;',
@@ -63,7 +64,7 @@ const LoginButton = styled(Button)(({ theme }) => ({
 const AppBarComponent: React.FC = () => {
     const { user, logout } = useUserContext();
     const [openLoginModal, setOpenLoginModal] = useState(false);
-    const [isFavoritesDrawerOpen, setIsFavoritesDrawerOpen] = useState(false);
+    const navigate = useNavigate();
 
     const handleLoginOpen = () => {
       setOpenLoginModal(true);
@@ -73,14 +74,6 @@ const AppBarComponent: React.FC = () => {
       setOpenLoginModal(false);
     };
 
-    const handleFavoritesDrawerToggle = () => {
-      setIsFavoritesDrawerOpen((prevIsOpen) => !prevIsOpen);
-    };
-
-    const handleFavoritesDrawerClose = () => {
-      console.log('Closing Favorites Sidebar');
-      setIsFavoritesDrawerOpen(false);
-    };
 
     const allSongs = useRecoilValue<Song[]>(allSongsAtom);
 
@@ -99,7 +92,7 @@ const AppBarComponent: React.FC = () => {
         </Search>
         {user ? (
             <div>
-              <Typography variant="body1" sx={{cursor : "pointer"}} onClick={handleFavoritesDrawerToggle}>
+              <Typography variant="body1" sx={{cursor : "pointer"}} onClick={()=>navigate('/favorites')}>
                 Favorites
               </Typography>
               <Typography variant="body1">{user.username}</Typography>
@@ -121,7 +114,7 @@ const AppBarComponent: React.FC = () => {
                 </div>
             )}
      <ModalComponent open={openLoginModal} onClose={handleLoginClose}>
-     <LoginForm/>
+     <LoginForm onClose={() => {}}/>
    </ModalComponent>
   
    </>

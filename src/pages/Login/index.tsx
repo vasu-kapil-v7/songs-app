@@ -2,20 +2,22 @@ import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { AppBar as MuiAppBar, Toolbar, Typography, InputBase, IconButton, Button, Modal as MuiModal, Paper, TextField } from '@mui/material';
 import { useUserContext } from '../../contexts/user';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     maxWidth: 400,
   }));
   
-  // interface LoginFormProps {
-  //   onClose: () => void;
-  // }
+  interface LoginFormProps {
+    onClose: () => void;
+  }
   
-  export const LoginForm: React.FC = () => {
+  export const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
     const { login } = useUserContext();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
   
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(event.target.value);
@@ -24,13 +26,18 @@ const LoginPaper = styled(Paper)(({ theme }) => ({
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(event.target.value);
     };
+
+
   
     const handleLoginSubmit = () => {
       console.log('Email:', email);
       console.log('Password:', password);
       const dummyUsername = 'JohnDoe';
       login(dummyUsername);
-      
+      onClose();
+      navigate('/');
+
+
     };
   
     return (
