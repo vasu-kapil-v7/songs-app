@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Typography } from '@mui/material';
 import { useUserContext } from '../../contexts/user';
 import { useNavigate } from 'react-router-dom';
+import CustomButton from '../../shared/Button';
 
 const UserActions: React.FC = () => {
   const { user, logout } = useUserContext();
@@ -26,7 +27,9 @@ const UserActions: React.FC = () => {
           <Button onClick={logout}>Logout</Button>
         </div>
       ) : (
-        <Button onClick={handleLoginClick}>Login</Button>
+        <CustomButton buttonType="login" onClick={handleLoginClick}>
+          Login
+        </CustomButton>
       )}
     </>
   );

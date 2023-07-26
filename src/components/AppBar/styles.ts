@@ -16,14 +16,14 @@ export const LogoLink = styled(Link)({
 });
 
 export const Search = styled('div')(({ theme }) => ({
-  flexGrow: 2, // Decreased the flexGrow to take less space
+  flexGrow: 2, 
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.black, 0.15),
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.black, 0.25),
   },
-  margin: theme.spacing(1), // Adjusted the margins
+  margin: theme.spacing(1),
 }));
 
 export const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -47,9 +47,9 @@ export const SearchInput = styled(InputBase)(({ theme }) => ({
 export const UserActions = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginLeft: theme.spacing(2), // Increased the margin to create more space
+  marginLeft: theme.spacing(2),
 }));
 
 export const LoginButton = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(2), // Increased the margin to create more space
+  marginLeft: theme.spacing(2),
 }));

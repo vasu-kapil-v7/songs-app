@@ -1,4 +1,3 @@
-// AppBarComponent.tsx
 import React, { useState } from 'react';
 import { AppBar, LogoLink } from './styles';
 import SearchBar from './SearchBar';
