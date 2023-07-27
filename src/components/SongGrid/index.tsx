@@ -6,6 +6,7 @@ import { currentPlayingSongAtom, favoriteSongsAtom } from '../../atom/CurrentSon
 import { getSongs } from '../../apis/songs';
 import Player from '../SongPlayer';
 import { cardStyle } from './styles';
+import { songsAtom } from '../../atom/SongAtom';
 
 const isSong = (obj: any): obj is Song => {
   return (
@@ -20,8 +21,8 @@ const isSong = (obj: any): obj is Song => {
 const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
   const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<string | null>(currentPlayingSongAtom);
   const [favoriteSongs, setFavoriteSongs] = useRecoilState<number[]>(favoriteSongsAtom);
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [searchedSongs, setSearchedSongs] = useState<Song[]>([]);
+  const [songs, setSongs] = useRecoilState<Song[]>(songsAtom); 
+    const [searchedSongs, setSearchedSongs] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const limit = 50;
@@ -46,11 +47,6 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
 
     fetchSongs();
   }, [searchTerm, offset]);
-
-  useEffect(() => {
-    setSongs([]);
-    setOffset(0);
-  }, [searchTerm]);
 
   useEffect(() => {
     if (searchTerm) {

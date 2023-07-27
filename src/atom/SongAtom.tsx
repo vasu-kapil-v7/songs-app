@@ -16,8 +16,3 @@ export const isPlayingAtom = atom<boolean>({
   key: 'isPlaying',
   default: false,
 });
-
-export const searchAtom = atom<string>({
-  key: 'search',
-  default: '',
-});
