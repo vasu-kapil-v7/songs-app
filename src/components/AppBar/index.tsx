@@ -8,7 +8,7 @@ import SongsGrid from '../SongGrid';
 import { useRecoilValue } from 'recoil';
 import { allSongsAtom } from '../../atom/AllSongs';
 import { useUserContext } from '../../contexts/user';
-import { Button, Toolbar, Typography } from '@mui/material';
+import { Box, Button, Toolbar, Typography } from '@mui/material';
 
 const AppBarComponent: React.FC = () => {
   const { user } = useUserContext();
@@ -31,6 +31,7 @@ const AppBarComponent: React.FC = () => {
 
   return (
     <>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <LogoLink to="/">
@@ -40,6 +41,7 @@ const AppBarComponent: React.FC = () => {
           <UserActions />
         </Toolbar>
       </AppBar>
+      </Box>
       {user ? (
         <div style={{ marginTop: '64px' }}>
           <SongsGrid searchTerm={searchTerm} />

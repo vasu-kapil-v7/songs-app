@@ -19,11 +19,11 @@ const UserActions: React.FC = () => {
   return (
     <>
       {user ? (
-        <div>
-          <Typography variant="body1" sx={{ cursor: 'pointer' }} onClick={handleFavoritesClick}>
+        <div style={{display : "flex", alignItems : "center"}}>
+          <Typography variant="body1" sx={{ cursor: 'pointer',marginRight:"8px" }} onClick={handleFavoritesClick}>
             Favorites
           </Typography>
-          <Typography variant="body1">{user.username}</Typography>
+          <Typography variant="body1" sx={{marginRight:"8px"}}>{user.username}</Typography>
           <Button onClick={logout}>Logout</Button>
         </div>
       ) : (

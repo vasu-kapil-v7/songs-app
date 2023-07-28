@@ -8,7 +8,6 @@ export const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }));
 
 export const LogoLink = styled(Link)({
-  flexGrow: 1,
   textDecoration: 'none',
   display: 'flex',
   alignItems: 'center',
@@ -16,14 +15,19 @@ export const LogoLink = styled(Link)({
 });
 
 export const Search = styled('div')(({ theme }) => ({
-  flexGrow: 2, 
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.black, 0.15),
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.black, 0.25),
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  margin: theme.spacing(1),
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
 }));
 
 export const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -36,12 +40,18 @@ export const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-export const SearchInput = styled(InputBase)(({ theme }) => ({
+export const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
-  padding: theme.spacing(1, 1, 1, 0),
-  paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  transition: theme.transitions.create('width'),
-  width: '100%',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
 }));
 
 export const UserActions = styled('div')(({ theme }) => ({

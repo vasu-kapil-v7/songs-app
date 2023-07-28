@@ -1,7 +1,6 @@
-// SearchBar.tsx
 import React, { useState, useCallback } from 'react';
 import { Search as SearchIcon } from '@mui/icons-material';
-import { Search, SearchIconWrapper, SearchInput } from './styles';
+import { Search, SearchIconWrapper, StyledInputBase } from './styles';
 import { debounce } from 'lodash';
 
 interface SearchBarProps {
@@ -32,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <SearchInput
+      <StyledInputBase
         placeholder="Search..."
         value={value}
         onChange={handleSearchChange}
