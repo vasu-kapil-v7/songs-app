@@ -10,3 +10,8 @@ export const favoriteSongsAtom = atom<number[]>({
   key: 'favoriteSongs',
   default: [],
 });
+
+export const songsAtom = atom<Song[]>({
+  key: 'songs',
+  default: [],
+});

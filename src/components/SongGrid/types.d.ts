@@ -3,6 +3,7 @@ declare interface Song {
     trackName: string;
     artistName: string;
     previewUrl: string;
+    artworkUrl100: string;
   }
   
   declare interface SongsGridProps {

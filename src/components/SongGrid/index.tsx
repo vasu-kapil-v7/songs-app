@@ -1,28 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, Card, CardContent, Typography, IconButton, Box, CircularProgress, Button } from '@mui/material';
-import { PlayArrow as PlayArrowIcon, Favorite as FavoriteIcon } from '@mui/icons-material';
-import { useRecoilState } from 'recoil';
-import { currentPlayingSongAtom, favoriteSongsAtom } from '../../atom/CurrentSong';
-import { getSongs } from '../../apis/songs';
-import Player from '../SongPlayer';
-import { cardStyle } from './styles';
-import { songsAtom } from '../../atom/SongAtom';
+import React, { useEffect, useState } from "react";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Box,
+  CircularProgress,
+  Button,
+} from "@mui/material";
+import { useRecoilState } from "recoil";
+import {
+  currentPlayingSongAtom,
+  favoriteSongsAtom,
+  songsAtom
+} from "../../atom/CurrentSong";
+import { getSongs } from "../../apis/songs";
+import Player from "../SongPlayer";
+import { cardStyle } from "./styles";
 
 const isSong = (obj: any): obj is Song => {
   return (
-    typeof obj === 'object' &&
-    'trackId' in obj &&
-    'trackName' in obj &&
-    'artistName' in obj &&
-    'previewUrl' in obj
+    typeof obj === "object" &&
+    "trackId" in obj &&
+    "trackName" in obj &&
+    "artistName" in obj &&
+    "previewUrl" in obj
   );
 };
 
 const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
-  const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<string | null>(currentPlayingSongAtom);
-  const [favoriteSongs, setFavoriteSongs] = useRecoilState<number[]>(favoriteSongsAtom);
-  const [songs, setSongs] = useRecoilState<Song[]>(songsAtom); 
-    const [searchedSongs, setSearchedSongs] = useState<Song[]>([]);
+  const [currentPlayingSong, setCurrentPlayingSong] = useRecoilState<
+    string | null
+  >(currentPlayingSongAtom);
+  const [favoriteSongs, setFavoriteSongs] =
+    useRecoilState<number[]>(favoriteSongsAtom);
+  const [songs, setSongs] = useRecoilState<Song[]>(songsAtom);
+  const [searchedSongs, setSearchedSongs] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const limit = 50;
@@ -33,7 +47,7 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
       setIsLoading(true);
 
       try {
-        const songsData = await getSongs(searchTerm || 'love', offset, limit);
+        const songsData = await getSongs(searchTerm || "love", offset, limit);
         if (offset === 0) {
           setSongs(songsData);
         } else {
@@ -59,19 +73,19 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
     }
   }, [searchTerm, songs]);
 
-  const songsToDisplay = favSongs ? songs.filter((song) => favoriteSongs.includes(song.trackId)) : songs;
-
-  const handlePlaySong = (previewUrl: string) => {
-    setCurrentPlayingSong(previewUrl);
-  };
-
   const handleAddToFavorites = (trackId: number) => {
     setFavoriteSongs((prevFavoriteSongs) => [...prevFavoriteSongs, trackId]);
   };
 
   const handleRemoveFromFavorites = (trackId: number) => {
-    setFavoriteSongs((prevFavoriteSongs) => prevFavoriteSongs.filter((id) => id !== trackId));
+    setFavoriteSongs((prevFavoriteSongs) =>
+      prevFavoriteSongs.filter((id) => id !== trackId)
+    );
   };
+
+  const songsToDisplay = favSongs
+  ? songs.filter((song) => favoriteSongs.includes(song.trackId))
+  : songs;
 
   const isFavorite = (trackId: number) => favoriteSongs.includes(trackId);
 
@@ -85,39 +99,42 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
         {songsToDisplay.length > 0 ? (
           songsToDisplay.map((song) => {
             if (isSong(song)) {
+              const isPlaying = currentPlayingSong === song.previewUrl;
               return (
                 <Grid key={song.trackId} item xs={12} sm={6} md={4} lg={3}>
-                  <Card sx={cardStyle}>
-                    <CardContent>
+                  <Card
+                    sx={{
+                      ...cardStyle,
+                      backgroundImage: `url(${song.artworkUrl100})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      border: isPlaying ? "8px solid #800080" : "none",
+                    }}
+                  >
+                    <CardContent
+                      sx={{
+                        color: "white",
+                        backgroundColor: "rgba(0, 0, 0, 0.7)",
+                        padding: "8px",
+                      }}
+                    >
                       <Typography variant="h6" gutterBottom>
                         {song.trackName}
                       </Typography>
                       <Typography variant="body1" gutterBottom>
                         {song.artistName}
                       </Typography>
-                      <IconButton
-                        color="primary"
-                        aria-label="play"
-                        onClick={() => handlePlaySong(song.previewUrl)}
-                      >
-                        <PlayArrowIcon />
-                      </IconButton>
-                      {!favSongs && (
-                        <IconButton
-                          color={isFavorite(song.trackId) ? "secondary" : "default"}
-                          aria-label="favorite"
-                          onClick={() =>
-                            isFavorite(song.trackId)
-                              ? handleRemoveFromFavorites(song.trackId)
-                              : handleAddToFavorites(song.trackId)
-                          }
-                        >
-                          <FavoriteIcon />
-                        </IconButton>
-                      )}
                     </CardContent>
                   </Card>
-                  <Player songUrl={song.previewUrl} />
+                  <Player
+                    songUrl={song.previewUrl}
+                    isFavorite={isFavorite(song.trackId)}
+                    onAddToFavorites={() => handleAddToFavorites(song.trackId)}
+                    onRemoveFromFavorites={() =>
+                      handleRemoveFromFavorites(song.trackId)
+                    }
+                  />
                 </Grid>
               );
             } else {
@@ -133,12 +150,26 @@ const SongsGrid: React.FC<SongsGridProps> = ({ favSongs, searchTerm }) => {
         )}
       </Grid>
       {isLoading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "200px",
+          }}
+        >
           <CircularProgress color="primary" />
         </Box>
       )}
       {!isLoading && songsToDisplay.length > 0 && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            my: 3,
+          }}
+        >
           <Button onClick={handleLoadMore}>Load More</Button>
         </Box>
       )}

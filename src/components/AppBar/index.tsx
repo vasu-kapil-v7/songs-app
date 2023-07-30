@@ -35,7 +35,7 @@ const AppBarComponent: React.FC = () => {
       <AppBar>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <LogoLink to="/">
-            <Typography variant="h6">Logo</Typography>
+            <Typography variant="h6">Songs App</Typography>
           </LogoLink>
           <SearchBar onSearchChange={handleSearchChange} />
           <UserActions />

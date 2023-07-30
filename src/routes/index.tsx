@@ -21,6 +21,6 @@ const router = createBrowserRouter([
     children: [{ path: "home", element: <MainPage /> }],
   },
   { path: "*", element: <PageNotFound/> },
-]);
+]); 
 
 export default router;

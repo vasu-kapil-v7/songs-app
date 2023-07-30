@@ -7,7 +7,7 @@ import { LoginPaper } from './styles';
 import { LoginFormProps } from './types';
 
 export const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
-  const { login } = useUserContext();
+  const { login,user } = useUserContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -21,10 +21,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
   };
 
   const handleLoginSubmit = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
-    const dummyUsername = 'JohnDoe';
-    login(dummyUsername);
+    login(user?.username);
     onClose();
     navigate('/');
   };

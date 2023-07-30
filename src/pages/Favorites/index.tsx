@@ -1,9 +1,9 @@
-// FavoritesPage.tsx
 import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { allSongsAtom } from '../../atom/AllSongs';
 import { favoriteSongsAtom } from '../../atom/CurrentSong';
 import SongsGrid from '../../components/SongGrid';
+import { NoFavoritesText } from './styles';
 
 const FavoritesPage: React.FC = () => {
   const favoriteSongIds = useRecoilValue<number[]>(favoriteSongsAtom);
@@ -12,7 +12,11 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <div>
-      <SongsGrid favSongs={!!favoriteSongs} />
+      {favoriteSongs.length > 0 ? (
+        <SongsGrid favSongs={true} />
+      ) : (
+        <NoFavoritesText>No songs added to favorites</NoFavoritesText>
+      )}
     </div>
   );
 };
