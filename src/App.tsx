@@ -5,11 +5,7 @@ import AppRoutes from "./routes";
 
 function App() {
   return (
-    <BrowserRouter>
-      <RecoilRoot>
-       
-      </RecoilRoot>
-    </BrowserRouter>
+    <></>
   );
 }
 
